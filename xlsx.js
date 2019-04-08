@@ -316,7 +316,8 @@ function datenum_local(v, date1904) {
 	var epoch = v.getTime();
 	if(date1904) epoch -= 1461*24*60*60*1000;
 	else if(v >= base1904) epoch += 24*60*60*1000;
-	return (epoch - (dnthresh + (v.getTimezoneOffset() - basedate.getTimezoneOffset()) * 60000)) / (24 * 60 * 60 * 1000);
+	return (epoch - (dnthresh + (getTimezoneOffsetMS(v) - getTimezoneOffsetMS(basedate)))) / (24 * 60 * 60 * 1000);
+	// return (epoch - (dnthresh + (v.getTimezoneOffset() - basedate.getTimezoneOffset()) * 60000)) / (24 * 60 * 60 * 1000);
 }
 function general_fmt_int(v) { return v.toString(10); }
 SSF._general_int = general_fmt_int;
@@ -2663,9 +2664,26 @@ function evert_arr(obj) {
 	}
 	return o;
 }
+	
+var getTimezoneOffsetMS = function(date)
+{
+    var fullYear = date.getFullYear();
+    var month = date.getMonth();
+    var day = date.getDate();
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var seconds = date.getSeconds();
+    var ms = date.getMilliseconds();
+
+    var time = date.getTime();
+    var utcTime = Date.UTC(fullYear, month, day, hours, minutes, seconds, ms);
+    var result = time - utcTime;
+    return result;
+};
 
 var basedate = new Date(1899, 11, 30, 0, 0, 0); // 2209161600000
-var dnthresh = basedate.getTime() + (new Date().getTimezoneOffset() - basedate.getTimezoneOffset()) * 60000;
+var dnthresh = basedate.getTime() + (getTimezoneOffsetMS(new Date()) - getTimezoneOffsetMS(basedate));
+// var dnthresh = basedate.getTime() + (new Date().getTimezoneOffset() - basedate.getTimezoneOffset()) * 60000;
 function datenum(v, date1904) {
 	var epoch = v.getTime();
 	if(date1904) epoch -= 1462*24*60*60*1000;
