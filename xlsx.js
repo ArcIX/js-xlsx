@@ -20464,7 +20464,7 @@ function writeSync(wb, opts) {
 		case 'htm':
 		case 'html': return write_string_type(write_htm_str(wb, o), o);
 		case 'txt': return write_stxt_type(write_txt_str(wb, o), o);
-		case 'csv': return write_string_type(write_csv_str(wb, o), o, "\ufeff");
+		case 'csv': return write_string_type(write_csv_str(wb, o), o);
 		case 'dif': return write_string_type(write_dif_str(wb, o), o);
 		case 'dbf': return write_binary_type(write_dbf_buf(wb, o), o);
 		case 'prn': return write_string_type(write_prn_str(wb, o), o);
@@ -20629,7 +20629,7 @@ function sheet_to_csv(sheet, opts) {
 	if(sheet == null || sheet["!ref"] == null) return "";
 	var r = safe_decode_range(sheet["!ref"]);
 	var FS = o.FS !== undefined ? o.FS : ",", fs = FS.charCodeAt(0);
-	var RS = o.RS !== undefined ? o.RS : "\n", rs = RS.charCodeAt(0);
+	var RS = o.RS !== undefined ? o.RS : "\r\n", rs = RS.charCodeAt(0);
 	var endregex = new RegExp((FS=="|" ? "\\|" : FS)+"+$");
 	var row = "", cols = [];
 	o.dense = Array.isArray(sheet);
